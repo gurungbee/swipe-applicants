@@ -1,7 +1,5 @@
-"use client"
+import ApplicantCarousel from "./applicant-carousel"
 
-import Page from "../page"
-
-export default function SyntheticV0PageForDeployment() {
-  return <Page />
+export default function Page() {
+  return <ApplicantCarousel />
 }

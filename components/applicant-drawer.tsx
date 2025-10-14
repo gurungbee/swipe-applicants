@@ -121,4 +121,3 @@ export function ApplicantDrawer({ applicant, isOpen, onClose }: ApplicantDrawerP
     </Drawer.Root>
   );
 }
-

@@ -1,50 +1,50 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { motion, AnimatePresence, PanInfo } from "framer-motion";
-import Image from "next/image";
-import { IconX, IconCheck, IconInfoCircle } from "@tabler/icons-react";
-import { applicants as initialApplicants } from "./data/applicants";
-import { Applicant } from "./types/applicant";
-import { ApplicantDrawer } from "./components/applicant-drawer";
-import { ApplicantSummary } from "./components/applicant-summary";
+import { useState } from "react"
+import { motion, AnimatePresence, type PanInfo } from "framer-motion"
+import Image from "next/image"
+import { IconX, IconCheck, IconInfoCircle } from "@tabler/icons-react"
+import { applicants as initialApplicants } from "./data/applicants"
+import type { Applicant } from "./types/applicant"
+import { ApplicantDrawer } from "./components/applicant-drawer"
+import { ApplicantSummary } from "./components/applicant-summary"
 
 export default function ApplicantCarousel() {
-  const [applicants, setApplicants] = useState<Applicant[]>(initialApplicants);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [exitX, setExitX] = useState(0);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [accepted, setAccepted] = useState<Applicant[]>([]);
-  const [rejected, setRejected] = useState<Applicant[]>([]);
-  const [isReviewComplete, setIsReviewComplete] = useState(false);
+  const [applicants, setApplicants] = useState<Applicant[]>(initialApplicants)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [exitX, setExitX] = useState(0)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [accepted, setAccepted] = useState<Applicant[]>([])
+  const [rejected, setRejected] = useState<Applicant[]>([])
+  const [isReviewComplete, setIsReviewComplete] = useState(false)
 
   const removeApplicant = (direction: number) => {
-    setExitX(direction);
-    const currentApplicant = applicants[currentIndex];
+    setExitX(direction)
+    const currentApplicant = applicants[currentIndex]
     if (direction > 0) {
-      setAccepted((prev) => [...prev, currentApplicant]);
+      setAccepted((prev) => [...prev, currentApplicant])
     } else {
-      setRejected((prev) => [...prev, currentApplicant]);
+      setRejected((prev) => [...prev, currentApplicant])
     }
-    setApplicants((prev) => prev.filter((_, index) => index !== currentIndex));
+    setApplicants((prev) => prev.filter((_, index) => index !== currentIndex))
     if (currentIndex === applicants.length - 1) {
-      setCurrentIndex(0);
+      setCurrentIndex(0)
     }
     if (applicants.length === 1) {
-      setIsReviewComplete(true);
+      setIsReviewComplete(true)
     }
-  };
+  }
 
   const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.x > 100) {
-      removeApplicant(1);
+      removeApplicant(1)
     } else if (info.offset.x < -100) {
-      removeApplicant(-1);
+      removeApplicant(-1)
     }
-  };
+  }
 
   if (isReviewComplete) {
-    return <ApplicantSummary accepted={accepted} rejected={rejected} />;
+    return <ApplicantSummary accepted={accepted} rejected={rejected} />
   }
 
   if (applicants.length === 0) {
@@ -52,10 +52,10 @@ export default function ApplicantCarousel() {
       <div className="flex h-screen items-center justify-center">
         <p className="text-xl font-medium text-muted-foreground">No more applicants to review</p>
       </div>
-    );
+    )
   }
 
-  const currentApplicant = applicants[currentIndex];
+  const currentApplicant = applicants[currentIndex]
 
   return (
     <div className="h-screen w-full overflow-hidden">
@@ -73,22 +73,24 @@ export default function ApplicantCarousel() {
           className="relative h-full w-full bg-white"
         >
           <Image
-            src={currentApplicant.photo}
+            src={currentApplicant.photo || "/placeholder.svg"}
             alt={currentApplicant.name}
             fill
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
+
           <div className="absolute top-0 left-0 right-0 p-6 text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-xl font-medium">{currentApplicant.name}</h3>
-                <p className="text-base">{currentApplicant.role}</p>
+            <div className="flex items-start justify-between">
+              <div className="flex-1 pr-4">
+                <h3 className="text-xl font-medium mb-1">{currentApplicant.name}</h3>
+                <p className="text-base font-normal mb-3">{currentApplicant.role}</p>
+                <p className="text-sm font-normal leading-relaxed line-clamp-4">{currentApplicant.summary}</p>
               </div>
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsDrawerOpen(true)}
-                className="rounded-full bg-white/20 p-2 backdrop-blur-sm transition-colors hover:bg-white/30"
+                className="rounded-full bg-white/20 p-2 backdrop-blur-sm transition-colors hover:bg-white/30 flex-shrink-0"
                 aria-label="View applicant details"
               >
                 <IconInfoCircle className="h-6 w-6 text-white" />
@@ -115,12 +117,7 @@ export default function ApplicantCarousel() {
         </motion.button>
       </div>
 
-      <ApplicantDrawer
-        applicant={currentApplicant}
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-      />
+      <ApplicantDrawer applicant={currentApplicant} isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
     </div>
-  );
+  )
 }
-

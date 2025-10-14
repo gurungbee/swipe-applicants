@@ -63,4 +63,3 @@ function ApplicantCard({ applicant, status }: ApplicantCardProps) {
     </Card>
   );
 }
-

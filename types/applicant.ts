@@ -25,4 +25,3 @@ interface Education {
   degree: string;
   year: string;
 }
-
